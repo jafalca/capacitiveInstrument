@@ -8,8 +8,9 @@ import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
 
+
 /**
- * The following code is to interface the Arduino console output with Java
+ * The following code is to interface the Arduino output with Java
  */
 public class SerialTest implements SerialPortEventListener {
     SerialPort serialPort;
@@ -93,11 +94,32 @@ public class SerialTest implements SerialPortEventListener {
     /**
      * Handle an event on the serial port. Read the data and print it.
      */
+
+    static boolean auto = false;
+    static autoSong as = new autoSong();
+    static String[] autoNotes = as.getAutoSong();
+    static int noteCount = 0;
+
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine=input.readLine();
-                playSound(inputLine);
+
+                if (auto == true) {
+                    sound.playSound(autoNotes[noteCount]);
+
+                    if (noteCount != 12) {
+                        noteCount++;
+                    }
+
+                    if (noteCount == 12) {
+                        noteCount = 0;
+                        auto = false;
+                    }
+
+                }
+
+                if (auto == false ) { playSound(inputLine); }
                 //System.out.println(inputLine);
             } catch (Exception e) {
                 System.err.println(e.toString());
@@ -120,63 +142,82 @@ public class SerialTest implements SerialPortEventListener {
         System.out.println("Started");
     }
 
-
-
+    static Synth sound = new Synth();
+    static int counter = 0;
+    static String[] notes = sound.getDrumNotes();
 
     public static void playSound(String pin){
-        Synth sound = new Synth();
-        String[] notes = sound.getPianoNotes();
+
+      //  Synth sound = new Synth();
+
         switch (pin){
             case "0 touched":
                 sound.playSound(notes[0]);
-                System.out.println("A");
+                System.out.println("0");
                 break;
             case "1 touched":
                 sound.playSound(notes[1]);
-                System.out.println("B");
+                System.out.println("1");
                 break;
             case "2 touched":
                 sound.playSound(notes[2]);
-                System.out.println("C");
+                System.out.println("2");
                 break;
             case "3 touched":
                 sound.playSound(notes[3]);
-                System.out.println("D");
+                System.out.println("3");
                 break;
             case "4 touched":
                 sound.playSound(notes[4]);
-                System.out.println("E");
+                System.out.println("4");
                 break;
             case "5 touched":
                 sound.playSound(notes[5]);
-                System.out.println("F");
+                System.out.println("5");
                 break;
             case "6 touched":
                 sound.playSound(notes[6]);
-                System.out.println("G");
+                System.out.println("6");
                 break;
             case "7 touched":
                 sound.playSound(notes[7]);
-                System.out.println("H");
+                System.out.println("7");
                 break;
             case "8 touched":
                 sound.playSound(notes[8]);
-                System.out.println("I");
+                System.out.println("8");
                 break;
             case "9 touched":
                 sound.playSound(notes[9]);
-                System.out.println("J");
+                System.out.println("9");
                 break;
             case "10 touched":
-                sound.playSound(notes[10]);
-                System.out.println("K");
+                auto = true;
+                System.out.println("10");
                 break;
             case "11 touched":
-                sound.playSound(notes[11]);
-                System.out.println("L");
+                counter += 1;
+                if (counter == 1) {
+                    notes = sound.getPianoNotes();
+                    System.out.println("11");
+                    System.out.println("Counter: " + counter);
+                }
+
+                if (counter == 2) {
+                    notes = sound.getDrumNotes();
+                    System.out.println("11");
+                    System.out.println("Counter: " + counter);
+                }
+
+                if (counter == 3) {
+                    counter = 0;
+                }
+
+//                sound.playSound(notes[11]);
+//                System.out.println("11");
                 break;
         }
 
     }
-}
 
+}

@@ -13,7 +13,6 @@ public class Synth {
      *
      */
     public void playSound(String filename){
-
         try {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream((new File(filename).getAbsoluteFile())));
