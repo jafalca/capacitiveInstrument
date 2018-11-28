@@ -8,9 +8,13 @@ import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
 
-
 /**
+ * @author: Javier Falca, Shanelle Ileto
  * The following code is to interface the Arduino output with Java
+ * The class is sample code retrieved from
+ * @link http://playground.arduino.cc/interfacing/java
+ * solely to interface the Metro M0 output with Java
+ * @note no credit is taken for this code portion
  */
 public class SerialTest implements SerialPortEventListener {
     SerialPort serialPort;
@@ -97,15 +101,15 @@ public class SerialTest implements SerialPortEventListener {
 
     static boolean auto = false;
     static autoSong as = new autoSong();
-    static String[] autoNotes = as.getAutoSong();
+    static String[] autoNotes = as.megalovania();
     static int noteCount = 0;
 
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine=input.readLine();
-
-                if (auto == true) {
+                //This code here was implemented by us for Project 3 to handle the logic for autoplay
+                if ((auto == true) && (inputLine != "")) {
                     sound.playSound(autoNotes[noteCount]);
 
                     if (noteCount != 12) {
@@ -142,13 +146,17 @@ public class SerialTest implements SerialPortEventListener {
         System.out.println("Started");
     }
 
+
+    /**Starting here is code entirely implemented by us, the Synth object is instance of another class we wrote
+     * Using switch cases we play different notes depending what the output of the metro is
+     */
+
     static Synth sound = new Synth();
     static int counter = 0;
-    static String[] notes = sound.getDrumNotes();
+    static String[] notes = sound.getPianoNotes();
 
     public static void playSound(String pin){
 
-      //  Synth sound = new Synth();
 
         switch (pin){
             case "0 touched":
@@ -200,21 +208,28 @@ public class SerialTest implements SerialPortEventListener {
                 if (counter == 1) {
                     notes = sound.getPianoNotes();
                     System.out.println("11");
-                    System.out.println("Counter: " + counter);
                 }
 
                 if (counter == 2) {
                     notes = sound.getDrumNotes();
                     System.out.println("11");
-                    System.out.println("Counter: " + counter);
                 }
 
                 if (counter == 3) {
-                    counter = 0;
+                    notes = sound.getSeven();
+                    System.out.println("11");
                 }
 
-//                sound.playSound(notes[11]);
-//                System.out.println("11");
+                if (counter == 4) {
+                    notes = sound.daftPunk1();
+                    System.out.println("11");
+                }
+
+                if (counter == 5) {
+                    notes = sound.daftPunk2();
+                    System.out.println("11");
+                    counter = 0;
+                }
                 break;
         }
 
