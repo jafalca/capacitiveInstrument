@@ -8,7 +8,7 @@
 /**
  * @Author Javier Falca
  * The following code is written to check if the pins are being touched or not
- * Code is written with the help of the MPR121 library and based on the test code provided by Adafruit
+ * Code is written with the help of the MPR121 library and based on the test code provided by Adafruit.
  */
 Adafruit_MPR121 cap = Adafruit_MPR121();
 
